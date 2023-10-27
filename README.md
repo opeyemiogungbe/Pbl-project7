@@ -38,3 +38,5 @@ This project is created to help introduce some vital set of DevOps tools that wi
 * Code Repository: GitHub
 
 The diagram below gives us an insight on the blueprint of this project
+
+![Screenshot 2023-10-27 094720](https://github.com/opeyemiogungbe/Pbl-project7/assets/136735745/77b42221-39c8-4428-b8a2-08e08b2eb179)
