@@ -36,3 +36,5 @@ This project is created to help introduce some vital set of DevOps tools that wi
 * Storage Server: Red Hat Enterprise Linux 8 + NFS Server
 * Programming Language: PHP
 * Code Repository: GitHub
+
+The diagram below gives us an insight on the blueprint of this project
