@@ -27,3 +27,12 @@ This project is created to help introduce some vital set of DevOps tools that wi
 **6. Prometheus** – An open-source monitoring system with a dimensional data model, flexible query language, efficient time series database and modern alerting approach.
 
 **7. Kibana**  – Kibana is a free and open user interface that lets you visualize your Elasticsearch data and navigate the Elastic Stack.
+
+**This project implementataion will consists of following components:**
+
+* Infrastructure: AWS
+* Webserver Linux: Red Hat Enterprise Linux 8
+* Database Server: Ubuntu 20.04 + MySQL
+* Storage Server: Red Hat Enterprise Linux 8 + NFS Server
+* Programming Language: PHP
+* Code Repository: GitHub
