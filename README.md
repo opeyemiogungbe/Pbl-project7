@@ -64,7 +64,7 @@ Network File System (NFS) is a distributed file system protocol that allows a us
 
   Mount lv-opt on /mnt/opt – To be used by Jenkins server in our next project 8 ( Note: We must create the/mnt directory firtst) see the image below:
 
-  
+  ![Screenshot 2023-08-17 110803](https://github.com/opeyemiogungbe/Pbl-project7/assets/136735745/a98ed569-7ea6-47cd-862e-7e8edef432a0)
 
 2. Install NFS server, configure it to start on reboot and make sure it is u and running
 ```
