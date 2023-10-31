@@ -48,9 +48,11 @@ Network File System (NFS) is a distributed file system protocol that allows a us
 1. Spin up a new EC2 instance with RHEL Linux 8 Operating System and configure LVM on the Server (as we did in project 6)
 
 
-* On our LVM configuration nstead of formating the disks as ext4 you will have to format them as xfs
+* On our LVM configuration nstead of formating the disks as ext4 you will have to format them as xfs as sown in the image below:
 
-* We will ensure there are 3 Logical Volumes. lv-opt lv-apps, and lv-logs
+![Screenshot 2023-08-17 110046](https://github.com/opeyemiogungbe/Pbl-project7/assets/136735745/89d7a094-f930-45e9-a436-405df52ca934)
+
+* We will ensure there are 3 Logical Volumes. lv-opt lv-apps, and lv-logs as shown in the image below:
 
 ![Screenshot 2023-08-17 105105](https://github.com/opeyemiogungbe/Pbl-project7/assets/136735745/4c794132-9948-41a7-a96c-83f7537ca2fa)
 
@@ -60,7 +62,9 @@ Network File System (NFS) is a distributed file system protocol that allows a us
 
   Mount lv-logs on /mnt/logs – To be used by webserver logs
 
-  Mount lv-opt on /mnt/opt – To be used by Jenkins server in our next project 8
+  Mount lv-opt on /mnt/opt – To be used by Jenkins server in our next project 8 ( Note: We must create the/mnt directory firtst) see the image below:
+
+  
 
 2. Install NFS server, configure it to start on reboot and make sure it is u and running
 ```
