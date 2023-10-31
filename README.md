@@ -40,3 +40,27 @@ This project is created to help introduce some vital set of DevOps tools that wi
 The diagram below gives us an insight on the blueprint of this project
 
 ![Screenshot 2023-10-27 094720](https://github.com/opeyemiogungbe/Pbl-project7/assets/136735745/77b42221-39c8-4428-b8a2-08e08b2eb179)
+
+## STEP 1 – PREPARE NFS SERVER
+
+Network File System (NFS) is a distributed file system protocol that allows a user on a client computer to access files over a network as if those files were on the client’s own computer. NFS is implemented using a client-server model, where the server is responsible for managing the file system and the client is responsible for accessing it. NFS is commonly used in Unix and Linux environments, but it can also be used in Windows environments using third-party software.
+
+1. Spin up a new EC2 instance with RHEL Linux 8 Operating System and configure LVM on the Server (as we did in project 6)
+* On our LVM configuration nstead of formating the disks as ext4 you will have to format them as xfs
+* We will ensure there are 3 Logical Volumes. lv-opt lv-apps, and lv-logs
+* we will create mount points on /mnt directory for the logical volumes as follow:
+
+  Mount lv-apps on /mnt/apps – To be used by webservers
+
+  Mount lv-logs on /mnt/logs – To be used by webserver logs
+
+  Mount lv-opt on /mnt/opt – To be used by Jenkins server in our next project 8
+
+2. Install NFS server, configure it to start on reboot and make sure it is u and running
+```
+sudo yum -y update
+sudo yum install nfs-utils -y
+sudo systemctl start nfs-server.service
+sudo systemctl enable nfs-server.service
+sudo systemctl status nfs-server.service
+```
