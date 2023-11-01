@@ -93,3 +93,20 @@ sudo chmod -R 777 /mnt/opt
   
 `sudo systemctl restart nfs-server.service`
 
+![Screenshot 2023-08-18 080818](https://github.com/opeyemiogungbe/Pbl-project7/assets/136735745/3df209a3-57a8-48a2-ab5f-37c8dac9a0fb)
+
+* We will also configure access to NFS for clients within the same subnet (we will use our subnet/cidr from AWS)
+
+```
+sudo vi /etc/exports
+
+/mnt/apps <Subnet-CIDR>(rw,sync,no_all_squash,no_root_squash)
+/mnt/logs <Subnet-CIDR>(rw,sync,no_all_squash,no_root_squash)
+/mnt/opt <Subnet-CIDR>(rw,sync,no_all_squash,no_root_squash)
+
+Esc + :wq!
+
+sudo exportfs -arv
+```
+
+
