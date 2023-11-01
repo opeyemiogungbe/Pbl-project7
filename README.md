@@ -104,9 +104,20 @@ sudo vi /etc/exports
 /mnt/logs <Subnet-CIDR>(rw,sync,no_all_squash,no_root_squash)
 /mnt/opt <Subnet-CIDR>(rw,sync,no_all_squash,no_root_squash)
 
-Esc + :wq!
+Esc + :wq!(this command is to write and quit the Vi editor)
 
 sudo exportfs -arv
 ```
 
+![Screenshot 2023-08-18 080818](https://github.com/opeyemiogungbe/Pbl-project7/assets/136735745/f875eebd-86cc-4d4e-b7ba-31c380af2688)
 
+4. We are going to also check which port is used by NFS and open it using Security Groups (In our case we are going to open on NFS server TCP 111, UDP 111, TCP2049, UDP 2049)
+
+## STEP 2 — CONFIGURE THE DATABASE SERVER
+
+In this step we are going to do the following:
+
+1. Install MySQL server
+2. Create a database and name it tooling
+3. Create a database user and name it webaccess
+4. Grant permission to webaccess user on tooling database to do anything only from the webservers subnet cidr
