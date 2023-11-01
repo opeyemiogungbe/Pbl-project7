@@ -76,3 +76,20 @@ sudo systemctl status nfs-server.service
 ```
 The image below shows the state of our NFS server after succesful configuration:
 
+![Screenshot 2023-08-18 050404](https://github.com/opeyemiogungbe/Pbl-project7/assets/136735745/3d946be9-dec3-4e06-a106-73228bca1c68)
+
+3. Now we are going to make sure we set up permission that will allow our Web servers to read, write and execute files on NFS running the command below:
+
+```
+sudo chown -R nobody: /mnt/apps
+sudo chown -R nobody: /mnt/logs
+sudo chown -R nobody: /mnt/opt
+
+sudo chmod -R 777 /mnt/apps
+sudo chmod -R 777 /mnt/logs
+sudo chmod -R 777 /mnt/opt
+```
+* we need to restart our NFS server for our permission to take effect:
+  
+`sudo systemctl restart nfs-server.service`
+
