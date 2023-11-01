@@ -74,3 +74,5 @@ sudo systemctl start nfs-server.service
 sudo systemctl enable nfs-server.service
 sudo systemctl status nfs-server.service
 ```
+The image below shows the state of our NFS server after succesful configuration:
+
