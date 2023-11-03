@@ -118,6 +118,123 @@ sudo exportfs -arv
 In this step we are going to do the following:
 
 1. Install MySQL server
-2. Create a database and name it tooling
-3. Create a database user and name it webaccess
-4. Grant permission to webaccess user on tooling database to do anything only from the webservers subnet cidr
+
+![Screenshot 2023-08-19 043841](https://github.com/opeyemiogungbe/Pbl-project7/assets/136735745/9dcb62e3-20d5-4d97-9c56-3c9434a2c677)
+
+3. Create a database and name it tooling
+
+![Screenshot 2023-08-19 044058](https://github.com/opeyemiogungbe/Pbl-project7/assets/136735745/ed2da650-8be2-4e7b-86a9-4606420d4657)
+
+5. Create a database user and name it webaccess
+
+![Screenshot 2023-08-19 050739](https://github.com/opeyemiogungbe/Pbl-project7/assets/136735745/2868f46a-d4e4-4f4a-824b-e33e6014ca59)
+
+6. Grant permission to webaccess user on tooling database to do anything only from the webservers subnet cidr
+
+![Screenshot 2023-08-19 051109](https://github.com/opeyemiogungbe/Pbl-project7/assets/136735745/2f575ff4-c42a-42c7-8854-29c045e6aea9)
+
+Now that we are done with our database configuration we'll go ahead and work on our webservers
+
+## Step 3 — Prepare the Web Servers
+
+We need to make sure that our Web Servers can serve the same content from shared storage solutions, which ia our NFS Server and MySQL database. For storing shared files that our Web Servers will use – we will utilize NFS and mount previously created Logical Volume lv-apps to the folder where Apache stores files to be served to the users (/var/www).
+
+  This approach will help us to add new webservers or remove them whenever we need, and the integrity of the data (in the database and on NFS) will be preserved.
+
+During the next steps we will do following:
+
+* Configure NFS client (this step must be done on all three servers)
+* Deploy a Tooling application to our Web Servers into a shared NFS folder
+* Configure the Web Servers to work with a single MySQL database
+
+1. Install NFS client after launching 3 new EC2 instance with RHEL 8 Operating System for our webservers
+
+`sudo yum install nfs-utils nfs4-acl-tools -y`
+
+2. Mount /var/www/ and target the NFS server’s export for apps
+
+```
+sudo mkdir /var/www
+sudo mount -t nfs -o rw,nosuid <NFS-Server-Private-IP-Address>:/mnt/apps /var/www
+```
+![Screenshot 2023-08-19 055100](https://github.com/opeyemiogungbe/Pbl-project7/assets/136735745/b91bfdcf-6655-4ac8-be58-6da245731afa)
+
+The image above shows us how we make a /var/www directory and mount our NFS towards the created directory.
+
+3. Verify that NFS was mounted successfully by running df -h. Make sure that the changes will persist on Web Server after reboot by updating the fstab file:
+
+`sudo vi /etc/fstab`
+
+add following line
+
+`<NFS-Server-Private-IP-Address>:/mnt/apps /var/www nfs defaults 0 0
+`
+
+![Screenshot 2023-08-19 090529](https://github.com/opeyemiogungbe/Pbl-project7/assets/136735745/b4eb784d-36e6-4553-a56e-71634eeb41c6)
+
+Note: in the image above we couldn't get the picture for the updating of the fstab file so we cat into it to see it's content
+
+4. Install Remi’s repository, Apache and PHP (Don't forget we will install it on the 3 webservers)
+
+```
+sudo yum install httpd -y
+
+sudo dnf install https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm
+
+sudo dnf install dnf-utils http://rpms.remirepo.net/enterprise/remi-release-8.rpm
+
+sudo dnf module reset php
+
+sudo dnf module enable php:remi-7.4
+
+sudo dnf install php php-opcache php-gd php-curl php-mysqlnd
+
+sudo systemctl start php-fpm
+
+sudo systemctl enable php-fpm
+
+setsebool -P httpd_execmem 1
+```
+
+5. we will verify that our Apache files and directories are available on the Web Server in /var/www and also on the NFS server in /mnt/apps. i'll be creating a new file touch test.txt from one server and check if the same file is accessible from other Web Servers.
+
+![Screenshot 2023-08-19 085636](https://github.com/opeyemiogungbe/Pbl-project7/assets/136735745/64df4ad5-3ed5-495f-8c39-70dbeb54c283)
+
+![Screenshot 2023-08-19 085648](https://github.com/opeyemiogungbe/Pbl-project7/assets/136735745/a8a5d5bf-3b57-4fd2-8da5-8389ca9fdef9)
+
+Fom the image above, the first picture is which is our webserver1 we change directory into /var/www and created a test.txt file in there. we can see the effect shows in our webserver2 when we list the content of /var/www directory. This means our NFS is mounted correctly
+
+6. Now we are going to locate the log folder for Apache on the Web Server and mount it to NFS server’s export for logs. Repeat step №3 to make sure the mount point will persist after reboot.
+
+7. We will Fork the tooling source code from Darey.io Github Account to your Github account.
+
+![Screenshot 2023-08-19 093558](https://github.com/opeyemiogungbe/Pbl-project7/assets/136735745/9170bed8-94a4-4153-834a-5caaacacd2c3)
+
+8. We deploy the tooling website’s code to the Webserver (we will do this using cloning the code from our remote repositoryon github to our webserver) and ensure that the html folder from the repository is deployed to /var/www/html.
+
+
+![Screenshot 2023-08-19 094650](https://github.com/opeyemiogungbe/Pbl-project7/assets/136735745/5b447cfb-8a6a-488a-beb4-463f2d08d631)
+
+
+![Screenshot 2023-08-19 094627](https://github.com/opeyemiogungbe/Pbl-project7/assets/136735745/6a103dc8-3cbd-46a1-94d3-3466fda4516d)
+
+9. Ater TCP port 80 is opened on the Web Server, setting permissions to our /var/www/html folder and also disable SELinux
+
+`sudo setenforce 0`
+
+To make this change permanent we must open following config file sudo vi /etc/sysconfig/selinux and set SELINUX=disabled then restrt httpd.
+
+![Screenshot 2023-08-23 130314](https://github.com/opeyemiogungbe/Pbl-project7/assets/136735745/bfd285ce-0476-4e1f-a116-57b14e453964)
+
+10. we will update the website’s configuration to connect to the database (in /var/www/html/functions.php file). Apply tooling-db.sql script to your database using this command
+
+`mysql -h <databse-private-ip> -u <db-username> -p <db-pasword> < tooling-db.sql`
+
+11. Now we will open the website in our browser http://<Web-Server-Public-IP-Address-or-Public-DNS-Name>/index.php and login into the website
+
+![Screenshot 2023-08-23 183250](https://github.com/opeyemiogungbe/Pbl-project7/assets/136735745/a3b261f6-cca2-4204-a658-962c576faf84)
+
+
+![Screenshot 2023-08-29 053214](https://github.com/opeyemiogungbe/Pbl-project7/assets/136735745/7a42ba59-c839-46bc-b3ae-db77ac9329d5)
+
+The abov image shows our configuration was succesful. we just implemented a web solution for a DevOps team using LAMP stack with remote Database and NFS servers
